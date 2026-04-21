@@ -1,25 +1,16 @@
-FROM node:20-alpine AS builder
-
-WORKDIR /app
-
-COPY package.json package-lock.json* ./
-RUN npm install
-
-COPY tsconfig.json ./
-COPY src/ ./src/
-
-RUN npm run build
-
 FROM node:20-alpine
 
+RUN apk add --no-cache git
+
 WORKDIR /app
 
-COPY package.json package-lock.json* ./
-RUN npm install --omit=dev
+RUN git clone https://github.com/TUO_USERNAME_GITHUB/SelfStream .
 
-COPY --from=builder /app/dist ./dist
+RUN npm install
 
-ENV PORT=7000
-EXPOSE 7000
+ENV PORT=7860
+EXPOSE 7860
+
+RUN npm run build
 
 CMD ["npm", "start"]
